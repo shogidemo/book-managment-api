@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 class AuthorController(private val authorService: AuthorService) {
 
     @PostMapping
-    fun createAuthor(@RequestBody author: Author): ResponseEntity<Long> {
+    fun saveAuthor(@RequestBody author: Author): ResponseEntity<Long> {
         val authorId = authorService.saveAuthor(author)
         return ResponseEntity.ok(authorId)
     }

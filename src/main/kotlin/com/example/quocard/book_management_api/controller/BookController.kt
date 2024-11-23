@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 class BookController(private val bookService: BookService) {
 
     @PostMapping
-    fun createBook(@RequestBody book: Book): ResponseEntity<Long> {
+    fun saveBook(@RequestBody book: Book): ResponseEntity<Long> {
         val bookId = bookService.saveBook(book)
         return ResponseEntity.ok(bookId)
     }
