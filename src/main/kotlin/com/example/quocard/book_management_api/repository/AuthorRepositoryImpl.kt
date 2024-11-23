@@ -3,6 +3,7 @@ package com.example.quocard.book_management_api.repository
 import com.example.quocard.book_management_api.entity.Author
 import com.example.quocard.jooq.generated.Tables.AUTHORS
 import org.jooq.DSLContext
+import org.springframework.stereotype.Repository
 
 /**
  * AuthorRepositoryImpl は Author エンティティを操作するためのリポジトリ実装クラス。
@@ -10,6 +11,7 @@ import org.jooq.DSLContext
  *
  * @param dsl jOOQ の DSLContext インスタンスを使用してクエリを実行する。
  */
+@Repository
 class AuthorRepositoryImpl(private val dsl: DSLContext) : AuthorRepository {
 
     /**

@@ -4,12 +4,14 @@ import com.example.quocard.book_management_api.entity.Author
 import com.example.quocard.book_management_api.entity.Book
 import com.example.quocard.jooq.generated.Tables.*
 import org.jooq.DSLContext
+import org.springframework.stereotype.Repository
 
 /**
  * `BookRepositoryImpl`は、`BookRepository`インターフェースの実装クラスであり、
  * 書籍に関連するデータベース操作を担当する。
  * 主にjOOQを利用してデータベース操作を行う。
  */
+@Repository
 class BookRepositoryImpl(private val dsl: DSLContext) : BookRepository {
 
     /**
