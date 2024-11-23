@@ -3,6 +3,8 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'nu.studer.jooq' version '8.2'
+	id 'org.flywaydb.flyway' version '9.22.0'
 }
 
 group = 'com.example.quocard'
@@ -20,11 +22,13 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	runtimeOnly 'org.postgresql:postgresql'
+	jooqGenerator 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -38,4 +42,48 @@ kotlin {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// jOOQの設定
+jooq {
+	configurations {
+		main { // メインの生成設定
+			generateSchemaSourceOnCompilation = true
+			generationTool {
+				jdbc {
+					driver = 'org.postgresql.Driver'
+					url = 'jdbc:postgresql://localhost:5432/book_management'
+					user = 'app_user'
+					password = '3110'
+				}
+				generator {
+					name = 'org.jooq.codegen.DefaultGenerator'
+					database {
+						name = 'org.jooq.meta.postgres.PostgresDatabase'
+						inputSchema = 'public' // デフォルトのスキーマを指定
+					}
+					target {
+						packageName = 'com.example.quocard.jooq.generated' // 自動生成されるコードのパッケージ名
+						directory = "$buildDir/generated-src/jooq/main" // 出力先ディレクトリ
+					}
+				}
+			}
+		}
+	}
+}
+
+// jOOQの生成されたコードをソースセットに追加
+sourceSets {
+	main {
+		java {
+			srcDir "$buildDir/generated-src/jooq/main"
+		}
+	}
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/book_management'
+	user = 'app_user'
+	password = '3110'
+	schemas = ['public']
 }

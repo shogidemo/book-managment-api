@@ -1,0 +1,6 @@
+CREATE TABLE books (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
+    published BOOLEAN NOT NULL DEFAULT FALSE
+);
