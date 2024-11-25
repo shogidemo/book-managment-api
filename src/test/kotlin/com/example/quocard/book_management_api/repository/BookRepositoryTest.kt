@@ -34,6 +34,40 @@ class BookRepositoryTest {
     }
 
     @Test
+    fun `登録済みのデータを更新できること`() {
+        // 既存データの作成
+        val author = Author(name = "Author", birthDate = LocalDate.of(1980, 1, 1))
+        val authorId = authorRepository.save(author)
+
+        val initialBook = Book(
+            title = "Initial Book",
+            price = BigDecimal("1000"),
+            _published = false,
+            authors = listOf(Author(id = authorId, name = author.name, birthDate = author.birthDate))
+        )
+        val bookId = bookRepository.save(initialBook)
+
+        // 更新データの準備
+        val updatedBook = Book(
+            id = bookId,
+            title = "Updated Book",
+            price = BigDecimal("2000"),
+            _published = true,
+            authors = listOf(Author(id = authorId, name = author.name, birthDate = author.birthDate))
+        )
+        val updatedId = bookRepository.save(updatedBook)
+
+        // データベースから取得
+        val result = bookRepository.findById(updatedId)
+
+        // 検証
+        assertNotNull(result)
+        assertEquals("Updated Book", result?.title)
+        assertEquals(BigDecimal("2000.00"), result?.price)
+        assertTrue(result?.published ?: false)
+    }
+
+    @Test
     fun `指定した著者の書籍を取得できること`() {
         val author = Author(name = "Test Author", birthDate = LocalDate.of(1990, 1, 1))
         val authorId = authorRepository.save(author)
