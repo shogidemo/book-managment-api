@@ -30,7 +30,7 @@ class BookServiceImpl(
                 val existingBook = bookRepository.findById(existingBookId)
                     ?: throw IllegalArgumentException("指定された書籍 (ID: $existingBookId) は存在しません。")
 
-                if(existingBook.published == true) throw IllegalArgumentException("出版済みの書籍を未出版には変更できません")
+                if(existingBook.published) throw IllegalArgumentException("出版済みの書籍を未出版には変更できません")
             }
         }
 
