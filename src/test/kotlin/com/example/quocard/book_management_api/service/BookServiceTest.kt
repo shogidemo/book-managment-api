@@ -42,5 +42,21 @@ class BookServiceTest {
 
         assertEquals("指定された著者が存在しません: 99", exception.message)
     }
+
+    @Test
+    fun `出版済みの書籍を未出版に変更しようとした場合、例外が発生すること`() {
+        val author = Author(id = 1L, name = "Test Author", birthDate = LocalDate.of(1990, 1, 1))
+        val existingBook = Book(id = 1L, title = "Existing Book", price = BigDecimal(1000), authors = listOf(author), _published = true)
+        val updatedBook = Book(id = 1L, title = "Updated Book", price = BigDecimal(1000), authors = listOf(author), _published = false)
+
+        `when`(bookRepository.findById(1L)).thenReturn(existingBook)
+        `when`(authorRepository.existsById(1L)).thenReturn(true)
+
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            bookService.saveBook(updatedBook)
+        }
+
+        assertEquals("出版済みの書籍を未出版には変更できません", exception.message)
+    }
 }
 
