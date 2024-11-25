@@ -25,7 +25,7 @@ class BookServiceImpl(
         }
 
         //出版済みの書籍を未出版に変更しようとしていないかチェックする。
-        if(book.published == false){
+        if(!book.published){
             book.id?.let { existingBookId ->
                 val existingBook = bookRepository.findById(existingBookId)
                     ?: throw IllegalArgumentException("指定された書籍 (ID: $existingBookId) は存在しません。")
